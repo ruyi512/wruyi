@@ -3,14 +3,13 @@ return array(
     //'配置项'=>'配置值'
 
     // 数据库配置
-    'DB_TYPE' => GreenCMS_DB_TYPE,
-    'DB_HOST' => GreenCMS_DB_HOST,
-    'DB_NAME' => GreenCMS_DB_NAME,
-    'DB_USER' => GreenCMS_DB_USR,
-    'DB_PWD' => GreenCMS_DB_PWD,
-    'DB_PORT' => GreenCMS_DB_PORT,
-    'DB_PREFIX' => GreenCMS_DB_PREFIX, //测试是为空，生产环境需要自形添加 如 green_
-    //   'DB_DSN' => 'pgsql:host=localhost;port=5432;dbname=green;',
+    'DB_TYPE' => CUSTOM_DB_TYPE,
+    'DB_HOST' => CUSTOM_DB_HOST,
+    'DB_NAME' => CUSTOM_DB_NAME,
+    'DB_USER' => CUSTOM_DB_USR,
+    'DB_PWD' => CUSTOM_DB_PWD,
+    'DB_PORT' => CUSTOM_DB_PORT,
+    'DB_PREFIX' => CUSTOM_DB_PREFIX,
 
     'DB_SQL_BUILD_CACHE'    =>  true, // 数据库查询的SQL创建缓存
 
