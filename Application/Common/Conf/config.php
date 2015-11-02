@@ -39,8 +39,6 @@ return array(
         //'__ROOT__' => '',// 强制修正__ROOT__
     ),
 
-    'TAGLIB_BUILD_IN' => 'Green,Cx',
-
     'LOAD_EXT_CONFIG' => 'config_opinion,config_node,config_custom,config_oem', // 加载扩展配置文件 config_alias,config_db,config_system
 
     'DEFAULT_MODULE' => 'Home',

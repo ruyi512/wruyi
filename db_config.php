@@ -19,6 +19,6 @@ define("GreenCMS_DB_PWD", 'root');
 define("GreenCMS_DB_PORT", '3306');
 
 //前缀,生产环境需要自形添加 如 green_
-define("GreenCMS_DB_PREFIX", 'green_');
+define("GreenCMS_DB_PREFIX", '');
 
 

@@ -13,7 +13,7 @@ $config = array(
         '*' => array('{$_SERVER.REQUEST_URI|md5}'), //全局静态缓存，第二个参数为时间单位秒
     ),
 
-    'URL_MODEL' => get_opinion('home_url_model', false, 0),
+    'URL_MODEL' => 2,
     'DEFAULT_THEME' => $DEFAULT_THEME,
 
     'LOG_LEVEL' => get_opinion('LOG_LEVEL', false),
@@ -32,7 +32,7 @@ $config = array(
 //    'SHOW_CHROME_TRACE' => get_opinion('SHOW_CHROME_TRACE', false, false),
 
 
-    'COOKIE_PREFIX' => get_opinion('COOKIE_PREFIX', false, 'greencms_'),
+    'COOKIE_PREFIX' => get_opinion('COOKIE_PREFIX', false, 'QWER_'),
     'COOKIE_EXPIRE' => get_opinion('COOKIE_EXPIRE', false, 3600),
     'COOKIE_DOMAIN' => get_opinion('COOKIE_DOMAIN', false),
     'COOKIE_PATH' => get_opinion('COOKIE_PATH', false),

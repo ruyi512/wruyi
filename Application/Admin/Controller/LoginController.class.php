@@ -10,7 +10,8 @@
 namespace Admin\Controller;
 
 use Common\Controller\BaseController;
-use Common\Event\UserEvent;
+use Common\Util\GreenMail;
+use Think\Exception;
 use Think\Verify;
 
 /**
@@ -38,28 +39,13 @@ class LoginController extends BaseController
 
         if ($user_session) {
             //auto login
-            $map['user_session'] = $user_session;
-            $UserEvent = new UserEvent();
-            $loginRes = $UserEvent->auth($map);
-            $loginResArray = json_decode($loginRes, true);
-            if ($loginResArray['status'] == 1) {
+            if (D('Admin')->verifySession($user_session)) {
                 //登陆成功
-                $authInfo = D('User', 'Logic')->where($map)->find();
-                $log['log_user_id'] = $authInfo['user_id'];
-                $log['log_user_name'] = $authInfo['user_login'];
-                $log['log_password'] = $authInfo['user_pass'];
-                $log['log_ip'] = get_client_ip();
-                $log['log_status'] = 2;
-
-                D('login_log')->data($log)->add();
-
                 if(cookie("last_visit_page")){
                     redirect(base64_decode(cookie("last_visit_page")));
-
                 }else{
                     $this->redirect('Admin/Index/index');
                 }
-
 
             }
 
@@ -83,14 +69,21 @@ class LoginController extends BaseController
     {
         $this->vertifyHandle();
 
-        $map = array();
-        $map['user_login'] = I('post.username');
-        $map['user_status'] = array('gt', 0);
-        $map['user_pass'] = encrypt(I('post.password'));
+        $user_name = I('post.username');
+        $password = I('post.password');
+        $remember = I('post.remember');
 
-        $UserEvent = new UserEvent();
-        $loginRes = $UserEvent->auth($map);
-        $this->json2Response($loginRes);
+        $admin_info = D('Admin')->verify($user_name, $password);
+        if($admin_info){
+            if($remember){
+                $user_session = D('Manager')->genHash($admin_info['id'], $password);
+                cookie('user_session', $user_session, 3600 * 24 * 30);
+            }
+            $_SESSION['admin'] = $admin_info;
+            $this->success("登录成功", U("Admin/Index/index"));
+        }else{
+            $this->error("用户名或者密码错误", U("Admin/Login/index"));
+        }
 
     }
 
@@ -110,51 +103,6 @@ class LoginController extends BaseController
     }
 
     /**
-     * 注册
-     */
-    public function register()
-    {
-        $this->registerJudge();
-        $this->display();
-
-    }
-
-    /**
-     * 判断是否注册
-     */
-    public function registerJudge()
-    {
-        $user_can_regist = get_opinion('user_can_regist', true, 1);
-        if ($user_can_regist) {
-        } else {
-            $this->error("不开放注册");
-        }
-    }
-
-    /**
-     * 注册用户处理
-     */
-    public function registerHandle()
-    {
-        $this->registerJudge();
-        $this->vertifyHandle();
-
-        $username = I('post.username');
-        $nickname = I('post.nickname');
-        $password = I('post.password');
-        $email = I('post.email');
-        if (!($username && $nickname && $password && $email)) {
-            $this->error("字段不能为空");
-        }
-
-        $UserEvent = new UserEvent();
-        $registerRes = $UserEvent->register($username, $nickname, $password, $email);
-        $this->json2Response($registerRes);
-
-
-    }
-
-    /**
      * 找回密码
      */
     public function forgetpassword()
@@ -170,21 +118,52 @@ class LoginController extends BaseController
         $this->vertifyHandle();
 
         if (IS_POST) {
-            $username = I('post.username');
-            $UserEvent = new UserEvent();
-            $forgetPasswordRes = $UserEvent->forgetPassword($username);
-            $this->json2Response($forgetPasswordRes);
+            $user_name = I('post.username');
+            $admin = D('Admin')->getByUserName($user_name);
+            if(!$admin){
+                $this->error('用户不存在');
+            }else{
+                $mail = new GreenMail();
+                $auth_code = D('AuthCode')->genCode('forgetpassword', $admin['id']);
+                $res =  $mail->sendMail( $admin['email'], "", "用户密码重置", "新密码: " . $auth_code);
+                if ($res['statue']) {
+                    $this->success("新密码的邮件已经发送到注册邮箱");
+
+                } else {
+                    $this->error("请检查邮件发送设置".$res['info']);
+                }
+            }
         }
     }
+
+    public function resetPassword(){
+        if(IS_POST){
+            $password = I('password');
+            if($password != I('password_re')){
+                $this->error('两次输入的密码不一致');
+            }
+            try{
+                $code = I('code');
+                $role = D('AuthCode')->useCode($code);
+                D('Admin')->resetPassword($role, $password);
+                $this->success('重置密码成功', U('Admin/Login/index'));
+            }catch (Exception $e){
+                $this->error($e->getMessage());
+            }
+        }else{
+            $this->display();
+        }
+    }
+
+
 
     /**
      * 注销
      */
     public function logout()
     {
-        $UserEvent = new UserEvent();
-        $logoutRes = $UserEvent->logout();
-        $this->json2Response($logoutRes);
+        unset($_SESSION['admin']);
+        $this->success("安全退出成功", U("Admin/Login/index"));
     }
 
     /**

@@ -18,18 +18,7 @@
     <!-- Right side column. Contains the navbar and content of the page -->
     <aside class="right-side">
         <!-- Content Header (Page header) -->
-
-
-        <section class="content-header">
-            <h1>
-                {$action}
-                <small>{:get_opinion('title')}</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="{$module_url}"><i class="fa fa-dashboard"></i> {$module}</a></li>
-                <li class="active">{$action}</li>
-            </ol>
-        </section>
+        <include file="Public:breadcrumb"/>
 
         <!-- Main content -->
         <section class="content">

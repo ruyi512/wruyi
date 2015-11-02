@@ -44,7 +44,7 @@
         }
 
         #imgVerify {
-            width: 120px;
+            width: 110px;
 
             margin: 0 auto;
             text-align: center;
@@ -59,8 +59,6 @@
 
 <div class="form-box" id="login-box">
     <div class="header ">
-        {:get_opinion('title')}
-        <br/>
         管理登陆
     </div>
     <form action="{:U('Admin/Login/login')}" method="POST">
@@ -86,7 +84,7 @@
 
                     </div>
                     <div class="col-xs-4">
-                        <img id="imgVerify" src="{:U('Admin/Login/vertify')}" onclick="fleshVerify();"/>
+                        <img id="imgVerify" src="" onclick="fleshVerify();"/>
                     </div>
                 </div>
 
@@ -105,11 +103,11 @@
 
 
                 <div class="col-xs-4" style=" line-height: 20px; ">
-                    <input type="checkbox" name="remember"
+                    <input type="checkbox" name="remember" id="remember"
                            style="vertical-align:middle; line-height: 20px; height: 20px;width: 20px;"
                            value="1"/>
                     <label style="   padding-top: 5px;display: inline-block;vertical-align:middle;
-                      float: none;   width: 66px; line-height: 20px;  margin-left: 0px;">记住我</label>
+                      float: none;   width: 66px; line-height: 20px;  margin-left: 0px;" for="remember">记住我</label>
 
                 </div>
                 <!-- /.col -->
@@ -120,11 +118,6 @@
             </div>
             <hr/>
             <p style="text-align: center">
-                <opinioncontrol realtime="true" opinion_name="user_can_regist" default="true">
-
-                    <a href="{:U('Admin/Login/register')}">注册</a> 或者
-                </opinioncontrol>
-
                 <a href="{:U('Admin/Login/forgetpassword')}">找回密码?</a>
             </p>
         </div>
@@ -136,20 +129,10 @@
 
         <div class="margin text-center">
 
-
-            <a href="{:U('Oauth/Sns/login',array('type'=>'sina'))}"><img
-                    src="__PUBLIC__/share/img/icon/weibo/weibo_login_24.png"/></a>
-
-            <!--<a href="{:U('Oauth/Sns/login',array('type'=>'greencms'))}">GreenOAuth账号登陆</a>-->
         </div>
 
         <div class="copyright">
 
-            2003-{:date('Y')} &copy; <a href="http://www.greencms.net">GreenCMS {:get_opinion('software_version')}</a>
-
-            <br/>
-
-            <a href="http://green.njtech.edu.cn">绿荫工作室</a>出品
         </div>
 
 
@@ -168,9 +151,9 @@
 <script>
     function fleshVerify() {
         //重载验证码
-        document.getElementById('imgVerify').src = '{:U("Admin/Login/vertify")}';
+        document.getElementById('imgVerify').src = '{:U("Admin/Login/vertify")}&r=' + Math.random();
     }
-    ;
+    fleshVerify();
     jQuery.fn.center = function () {
         this.css("position", "absolute");
         this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) +
@@ -183,20 +166,9 @@
 </script>
 <script>
     $(document).ready(function () {
-
-        setTimeout(fleshVerify, 1000);
         $("#login-box").center();
     });
 </script>
-
-<div style="display: none">
-    <script type="text/javascript">
-        var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-        document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F48659a4ab85f1bcebb11d3dd3ecb6760' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-
-</div>
-
 
 </body>
 </html>

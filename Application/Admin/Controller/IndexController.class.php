@@ -9,9 +9,7 @@
 
 namespace Admin\Controller;
 
-use Common\Event\AccessEvent;
-use Common\Event\CountEvent;
-use Common\Event\UpdateEvent;
+use Admin\Model\Admin;
 
 
 /**
@@ -25,79 +23,37 @@ class IndexController extends AdminBaseController
      */
     public function index()
     {
-        $CountEvent = new CountEvent();
-
-
-        $this->assign("PostCount", $CountEvent->getPostCount());
-        $this->assign("UserCount", $CountEvent->getUserCount());
-
 
         $this->display();
 
     }
 
-
     /**
-     * 返回home
+     * 修改密码页面
      */
-    public function main()
+    public function changePass()
     {
-        $this->redirect('Home/Index/index');
+        $this->display('changepass');
     }
 
-
-    public function checkTodo()
+    /**
+     * 修改密码处理
+     */
+    public function changepassHandle()
     {
-        $checkTodo = S("checkTodo");
-        if (empty($checkTodo)) {
 
+        if (I('post.password') != I('post.rpassword')) {
+            $this->error('两次密码不同');
+        }
 
-            $check_res = "";
-
-            $AccessEvent = new AccessEvent();
-            $UpdateEvent = new UpdateEvent();
-
-            if ($UpdateEvent->check()) {
-                $check_res .= '<li><a href="' . U("Admin/System/update") . '"><i class="fa fa-laptop"></i> 发现新的可升级版本</a></li>';
-            }
-
-            if (!$UpdateEvent->checkVersion()) {
-                $check_res .= '<li><a href="' . U("Admin/System/update") . '"><i class="fa fa-laptop"></i> 数据库中版本号与代码中不一致</a></li>';
-            }
-
-
-            if (!$AccessEvent->checkAccess()) {
-                $check_res .= '<li><a href="' . U("Admin/Access/rolelist") . '"><i class="fa fa-laptop"></i> 需要重建角色权限！</a></li>';
-
-            }
-
-            if (!$AccessEvent->checkNode()) {
-                $check_res .= '<li><a href="' . U("Admin/Access/nodelist") . '"><i class="fa fa-laptop"></i> 需要重建节点！</a></li>';
-
-
-            }
-
-            if ($check_res == "") {
-                $check_res = "none";
-            }
-
-
-            S("checkTodo", $check_res);
-
-
-            die($check_res);
-
-        } else {
-
-            die(S("checkTodo"));
-
+        $uid = $_SESSION['admin']['id'];
+        $result = D('Admin')->changePassword($uid, I('post.password'), I('post.opassword'));
+        if($result){
+            $this->success('修改密码成功');
+        }else{
+            $this->error("修改密码失败");
         }
     }
 
 
-    public function checkTodoCacheClear()
-    {
-        S("checkTodo", null);
-    }
-    
 }
