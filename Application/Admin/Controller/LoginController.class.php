@@ -1,12 +1,4 @@
 <?php
-/**
- * Created by GreenStudio GCS Dev Team.
- * File: LoginController.class.php
- * User: Timothy Zhang
- * Date: 14-1-25
- * Time: 上午10:39
- */
-
 namespace Admin\Controller;
 
 use Common\Controller\BaseController;

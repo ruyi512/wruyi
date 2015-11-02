@@ -1,12 +1,4 @@
 <?php
-/**
- * Created by GreenStudio GCS Dev Team.
- * File: SystemController.class.php
- * User: Timothy Zhang
- * Date: 14-1-26
- * Time: 下午5:28
- */
-
 namespace Admin\Controller;
 
 use Common\Event\SystemEvent;

@@ -1,12 +1,4 @@
 <?php
-/**
- * Created by GreenStudio GCS Dev Team.
- * File: IndexController.class.php
- * User: Timothy Zhang
- * Date: 14-1-25
- * Time: 上午10:38
- */
-
 namespace Admin\Controller;
 
 use Admin\Model\Admin;
