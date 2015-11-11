@@ -18,9 +18,6 @@ use Think\Model\RelationModel;
 class AdminModel extends RelationModel
 {
 
-    protected $trueTableName    =   'admin';
-
-
     public function verify($user_name, $password){
         $password = encrypt($password);
         $map = array("user_name" => $user_name, "password" =>$password);

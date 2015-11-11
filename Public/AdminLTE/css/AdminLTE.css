@@ -14,10 +14,8 @@
 html,
 body {
   overflow-x: hidden!important;
-  font-family: 'Microsoft Yahei', sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
-  background: #f9f9f9;
 }
 a {
   color: #3c8dbc;
@@ -57,7 +55,6 @@ body > .header {
 }
 /*right side - contins main content*/
 .right-side {
-  background-color: #f9f9f9;
   margin-left: 200px;
 }
 /*left side - contains sidebar*/
@@ -112,7 +109,6 @@ body.fixed .wrapper {
 /* Content */
 .content {
   padding: 20px 15px;
-  background: #f9f9f9;
 }
 /* Utility */
 /* H1 - H6 font */
@@ -1005,37 +1001,6 @@ body > .header .logo .icon {
    All form elements including input, select, textarea etc.
 -----------------------------------------------------------------
 */
-.form-control {
-  -webkit-border-radius: 0px !important;
-  -moz-border-radius: 0px !important;
-  border-radius: 0px !important;
-  box-shadow: none;
-}
-.form-control:focus {
-  border-color: #3c8dbc !important;
-  box-shadow: none;
-}
-.form-group.has-success label {
-  color: #00a65a;
-}
-.form-group.has-success .form-control {
-  border-color: #00a65a !important;
-  box-shadow: none;
-}
-.form-group.has-warning label {
-  color: #f39c12;
-}
-.form-group.has-warning .form-control {
-  border-color: #f39c12 !important;
-  box-shadow: none;
-}
-.form-group.has-error label {
-  color: #f56954;
-}
-.form-group.has-error .form-control {
-  border-color: #f56954 !important;
-  box-shadow: none;
-}
 /* Input group */
 .input-group .input-group-addon {
   border-radius: 0;

@@ -18,7 +18,6 @@ use Think\Model\RelationModel;
 class AuthCodeModel extends RelationModel
 {
 
-    protected $trueTableName    =   'auth_code';
     protected $validTime = 1800;
 
     public function genCode($scene, $role=''){

@@ -9,7 +9,6 @@
 
 namespace Admin\Widget;
 
-use Org\Util\Rbac;
 use Think\Controller;
 
 /**
@@ -47,80 +46,28 @@ class CommonWidget extends Controller
 
     private function show_side_menu()
     {
-        C('admin_sub_menu', array_change_key_case(C('admin_sub_menu')));
-        C('admin_big_menu', array_change_key_case(C('admin_big_menu')));
-        C('admin_black_list_menu', array_change_key_case(C('menu_black_list')));
-        C('admin_big_menu_icon', array_change_key_case(C('admin_big_menu_icon')));
 
-//        $accessList = RBAC::getAccessList($_SESSION [get_opinion('USER_AUTH_KEY')]);
-//        $cache_access = array_change_key_case($accessList [strtoupper(MODULE_NAME)]);
+        $role = D('AdminRole')->find($_SESSION['admin']['role_id']);
+        $authority = explode(',', $role['authority']);
+        $menus = D('AdminModule')->getMenus($authority, CONTROLLER_NAME, ACTION_NAME);
+        $content = '';
+        foreach($menus['menus'] as $menu){
+            $icon = 'fa fa-' . $menu['icon'];
+            $css = $menus['cur_menu']['parent_id'] == $menu['id'] ? 'treeview active' : 'treeview';
+            $content .= '<li id="'.$menu['id'].'" class="' . $css . '">
+                        <a href="#"><i class="' . $icon . '"></i><span>' . $menu['name'] . '</span><i class="fa fa-angle-left pull-right"></i></a>
+                        <ul class="treeview-menu">';
 
-        $cache = C('admin_big_menu');
-
-        $icon = C('admin_big_menu_icon');
-
-
-//        if ($_SESSION [get_opinion('ADMIN_AUTH_KEY')] != true) {
-//            foreach ($cache as $cache_key => $cache_each) {
-//                if (!array_key_exists($cache_key, $cache_access)) {
-//                    unset ($cache [$cache_key]);
-//                } else {
-//                }
-//            }
-//        }
-//
-//        if ($_SESSION [get_opinion('ADMIN_AUTH_KEY')] != true) {
-//            foreach ($cache_access as $cache2_key => $cache2_each) {
-//                foreach ($cache2_each as $key => $value) {
-//                    $cache2_each [$key] = strtolower($cache2_key) . '/' . strtolower($key);
-//                }
-//                $cache_access [$cache2_key] = array_flip(array_change_key_case($cache2_each));
-//            }
-//
-//            $cache2 = array_change_key_case(C('admin_sub_menu'));
-//            foreach ($cache2 as $cache2_key => $cache2_each) {
-//                $cache2 [$cache2_key] = array_change_key_case($cache2_each);
-//            }
-//
-//            foreach ($cache_access as $cache_access_key => $cache_access_each) {
-//                foreach ($cache_access_each as $cache_access_each_key => $cache_access_each_each) {
-//                    if (!empty ($cache2 [$cache_access_key] [$cache_access_each_key])) {
-//                        $cache_access [$cache_access_key] [$cache_access_each_key] = $cache2 [$cache_access_key] [$cache_access_each_key];
-//                    } else {
-//                        unset ($cache_access [$cache_access_key] [$cache_access_each_key]);
-//                    }
-//                }
-//            }
-//            C('admin_sub_menu', $cache_access);
-//        }
-//
-//        $count = count($cache);
-        $i = 1;
-        $menu = "";
-        foreach ($cache as $url => $name) {
-            $class = 'fa ' . $icon[$url];
-            $css = $url == strtolower(CONTROLLER_NAME) ? "treeview active" : "treeview";
-            $menu .= '<li class="' . $css . '"><a href="#">
-                <i class="' . $class . '"></i>
-                <span>' . $name . '</span>
-              <i class="fa fa-angle-left pull-right"></i>
-
-                </a><ul class="treeview-menu">';
-            $cache = C('admin_sub_menu');
-            foreach ($cache as $big_url => $big_name) {
-                if ($big_url == $url)
-                    foreach ($big_name as $sub_url => $sub_name) {
-                        $id=strtolower(MODULE_NAME. "-".str_replace("/","-",$sub_url));
-
-                        $sub_true_url = explode('/', $sub_url);
-                        $css = !strcasecmp($sub_true_url [1], strtolower(ACTION_NAME)) ? "active" : "";
-                        $menu .= '<li  id="'.$id.'" class="' . $css . '"><a href="' . U("Admin/" . "$sub_url") . '"><i class="fa fa-angle-double-right"></i>' . $sub_name . '</a></li>';
-                    }
+            foreach($menus['sub_menus'] as $sub_menu){
+                if($sub_menu['parent_id'] != $menu['id']){
+                    continue;
+                }
+                $css = $sub_menu['id'] == $menus['cur_menu']['id'] ? 'active' : '';
+                $content .= '<li  id="'.$sub_menu['id'].'" class="' . $css . '"><a href="' . U("Admin/" . $sub_menu['gateway']) . '"><i class="fa fa-angle-double-right"></i>' . $sub_menu['name'] . '</a></li>';
             }
-            $menu .= '</ul></li>';
+            $content .= "</ul></li>\n";
         }
-        $i++;
-        return $menu;
+        return $content;
     }
 
 

@@ -32,7 +32,6 @@ class SystemController extends AdminBaseController
             $extensions_list = $extensions_list . "$value&nbsp;&nbsp;";
         }
 
-
         $info = array(
             '操作系统' => PHP_OS,
             '主机名IP端口' => $_SERVER ['SERVER_NAME'] . ' (' . $_SERVER ['SERVER_ADDR'] . ':' . $_SERVER ['SERVER_PORT'] . ')',
@@ -53,7 +52,6 @@ class SystemController extends AdminBaseController
             '服务器时间' => date("Y年n月j日 H:i:s 秒"),
             '北京时间' => gmdate("Y年n月j日 H:i:s 秒", time() + 8 * 3600),
 
-
             '显示错误信息' => ini_get("display_errors") == "1" ? '√' : '×',
             'register_globals' => get_cfg_var("register_globals") == "1" ? '√' : '×',
             'magic_quotes_gpc' => (1 === get_magic_quotes_gpc()) ? '√' : '×',
@@ -65,12 +63,6 @@ class SystemController extends AdminBaseController
         $this->assign('extensions_list', $extensions_list);
 
         $this->display('info');
-    }
-
-
-    public function phpinfo()
-    {
-        $this->show(phpinfo());
     }
 
     /**
@@ -125,7 +117,6 @@ class SystemController extends AdminBaseController
             }
             $SystemEvent = new SystemEvent;
             $SystemEvent->clearCacheAll();
-
 
             $this->success("清除成功");
         } else {

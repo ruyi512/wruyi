@@ -1,9 +1,6 @@
 <?php
 namespace Admin\Controller;
 
-use Admin\Model\Admin;
-
-
 /**
  * Class IndexController
  * @package Admin\Controller
@@ -25,27 +22,21 @@ class IndexController extends AdminBaseController
      */
     public function changePass()
     {
-        $this->display('changepass');
-    }
+        if(IS_POST){
+            if (I('post.password') != I('post.rpassword')) {
+                $this->error('两次密码不同');
+            }
 
-    /**
-     * 修改密码处理
-     */
-    public function changepassHandle()
-    {
-
-        if (I('post.password') != I('post.rpassword')) {
-            $this->error('两次密码不同');
-        }
-
-        $uid = $_SESSION['admin']['id'];
-        $result = D('Admin')->changePassword($uid, I('post.password'), I('post.opassword'));
-        if($result){
-            $this->success('修改密码成功');
+            $uid = $_SESSION['admin']['id'];
+            $result = D('Admin')->changePassword($uid, I('post.password'), I('post.opassword'));
+            if($result){
+                $this->success('修改密码成功');
+            }else{
+                $this->error("修改密码失败");
+            }
         }else{
-            $this->error("修改密码失败");
+            $this->display();
         }
     }
-
 
 }

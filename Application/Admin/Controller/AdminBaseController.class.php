@@ -10,6 +10,8 @@
 namespace Admin\Controller;
 
 use Common\Controller\BaseController;
+use Common\Util\GreenPage;
+use Think\Model;
 
 /**
  * Class AdminBaseController
@@ -110,31 +112,6 @@ class AdminBaseController extends BaseController
         }
     }
 
-    /**
-     *
-     */
-    public function saveConfig()
-    {
-        $post_data = I('post.');
-        foreach ($post_data as $name => $value) {
-            set_opinion($name, $value);
-        }
-    }
-
-    /**
-     *
-     */
-    protected function saveKv()
-    {
-        S('kv_array', null); //清空缓存
-
-        foreach ($_POST as $key => $value) {
-            set_kv($key, $value);
-        }
-
-
-    }
-
     protected function checkLogin(){
         if(! $_SESSION['admin']){
             $this->error('请先登录', U('Admin/Login/index'));
@@ -143,5 +120,49 @@ class AdminBaseController extends BaseController
 
     protected function checkPermissions(){
 
+    }
+
+    public function index()
+    {
+        $page = I('get.page', 20);
+        $model = D(CONTROLLER_NAME);
+        $count = $model->count();
+        if ($count != 0) {
+            $Page = new GreenPage($count, $page); // 实例化分页类 传入总记录数
+            $pager_bar = $Page->show();
+            $limit = $Page->firstRow . ',' . $Page->listRows;
+            $list = $model->limit($limit)->select();
+        }
+        $this->assign('list', $list);
+        $this->assign('pager', $pager_bar);
+        $this->display();
+    }
+
+    public function delete(){
+        $id = I("get.id");
+        D(CONTROLLER_NAME)->delete($id);
+        $this->success('删除成功');
+    }
+
+    public function edit(){
+        $model = D(CONTROLLER_NAME);
+        if(IS_POST){
+            $model->create($_POST, Model::MODEL_UPDATE);
+            $model->save();
+        }else{
+            $data = $model->find(I('get.id'));
+            $this->assign('data', $data);
+            $this->display();
+        }
+    }
+
+    public function add(){
+        if(IS_POST){
+            $model = D(CONTROLLER_NAME);
+            $model->create($_POST, Model::MODEL_INSERT);
+            $model->add();
+        }else{
+            $this->display();
+        }
     }
 }

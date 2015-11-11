@@ -12,13 +12,14 @@ $menu_arr = array(
 
     'admin_big_menu_icon' => array(
         'System' => 'fa-gear',
-        'Member' => 'fa-group',
+        'User' => 'fa-group',
         'Index' => 'fa-user'
     ),
 
 
     'admin_big_menu' => array(
         'Index' => '个人中心',
+        'User' => '用户中心',
         'System' => '系统设置',
     ),
 
@@ -28,6 +29,11 @@ $menu_arr = array(
             'Index/changePass' => '修改密码',
         ),
 
+        'User' => array(
+            'User/index' => '用户管理',
+            'User/add' => '新增用户',
+            'User/edit' => '编辑用户',
+        ),
 
         'System' => array(
             'System/clear' => '缓存清理',
