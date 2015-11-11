@@ -26,4 +26,4 @@ node_modules/
 /Upload
 Vagrantfile
 .vagrant/
-/const_config.php
+/db_config.php
