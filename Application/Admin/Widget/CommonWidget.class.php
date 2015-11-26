@@ -47,13 +47,17 @@ class CommonWidget extends Controller
     private function show_side_menu()
     {
 
-        $role = D('AdminRole')->find($_SESSION['admin']['role_id']);
-        $authority = explode(',', $role['authority']);
+        $authority = null;
+        if($_SESSION['admin']['id'] != 1){
+            $role = D('AdminRole')->find($_SESSION['admin']['role_id']);
+            $authority = explode(',', $role['authority']);
+        }
         $menus = D('AdminModule')->getMenus($authority, CONTROLLER_NAME, ACTION_NAME);
         $content = '';
+        $cur_menu =  $menus['cur_menu']['grade'] == 2 ? $menus['cur_menu'] : $menus['sub_menus'][$menus['cur_menu']['parent_id']];
         foreach($menus['menus'] as $menu){
             $icon = 'fa fa-' . $menu['icon'];
-            $css = $menus['cur_menu']['parent_id'] == $menu['id'] ? 'treeview active' : 'treeview';
+            $css = $cur_menu['parent_id'] == $menu['id'] ? 'treeview active' : 'treeview';
             $content .= '<li id="'.$menu['id'].'" class="' . $css . '">
                         <a href="#"><i class="' . $icon . '"></i><span>' . $menu['name'] . '</span><i class="fa fa-angle-left pull-right"></i></a>
                         <ul class="treeview-menu">';
@@ -62,8 +66,9 @@ class CommonWidget extends Controller
                 if($sub_menu['parent_id'] != $menu['id']){
                     continue;
                 }
-                $css = $sub_menu['id'] == $menus['cur_menu']['id'] ? 'active' : '';
-                $content .= '<li  id="'.$sub_menu['id'].'" class="' . $css . '"><a href="' . U("Admin/" . $sub_menu['gateway']) . '"><i class="fa fa-angle-double-right"></i>' . $sub_menu['name'] . '</a></li>';
+                $css = $sub_menu['id'] == $cur_menu['id'] ? 'active' : '';
+                $double = $sub_menu['id'] == $cur_menu['id'] ? '-double' : '';
+                $content .= '<li  id="'.$sub_menu['id'].'" class="' . $css . '"><a href="' . U("Admin/" . $sub_menu['controller'] . '/'. $sub_menu['action']) . '"><i class="fa fa-angle' . $double .'-right"></i>' . $sub_menu['name'] . '</a></li>';
             }
             $content .= "</ul></li>\n";
         }

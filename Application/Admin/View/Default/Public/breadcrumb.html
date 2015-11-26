@@ -1,9 +1,14 @@
 <section class="content-header">
     <h1>
-        {$action}
+        {$menu_name}
     </h1>
     <ol class="breadcrumb">
-        <li><a href="{$module_url}"><i class="fa {$menu_icon}"></i> {$module}</a></li>
-        <li class="active">{$action}</li>
+        <!--<li><a href="{$menu_url}"><i class="fa fa-{$menu_icon}"></i> {$menu}</a></li>-->
+        <!--<li class="active"><a href="{$sub_menu_url}">{$sub_menu}</a></li>-->
+        <for start="1" end="4">
+            <if condition="$menus[$i]">
+            <li ><a href="#"><i class="fa fa-{$menus[$i]['icon']}"></i> {$menus[$i]['name']}</a></li>
+            </if>
+        </for>
     </ol>
 </section>

@@ -17,6 +17,7 @@ use Think\Model\RelationModel;
  */
 class AdminModuleModel extends RelationModel
 {
+
     public function getMenus($authority=null, $contoller='', $action=''){
         if($authority != null){
             $this->where(array("id"=>array("IN", $authority)));
@@ -25,12 +26,11 @@ class AdminModuleModel extends RelationModel
         $result = array("menus"=>array(), "sub_menus"=>array(), "cur_menu"=>null);
         foreach($data as $row){
             if($row['parent_id'] == 0){
-                $result['menus'][] = $row;
+                $result['menus'][$row['id']] = $row;
             }else{
-                $result['sub_menus'][] = $row;
+                $result['sub_menus'][$row['id']] = $row;
                 if(strtolower($contoller) == $row['controller']){
-                    $actions = explode(',', $row['actions']);
-                    if(in_array($action, $actions)){
+                    if($action == $row['action']){
                         $result['cur_menu'] = $row;
                     }
                 }

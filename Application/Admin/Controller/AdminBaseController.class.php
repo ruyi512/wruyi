@@ -64,41 +64,24 @@ class AdminBaseController extends BaseController
     private function _currentPostion()
     {
 
-        //  echo CONTROLLER_NAME;
-        //  echo ACTION_NAME;
-
-        $cache = get_opinion('admin_big_menu');
-        foreach ($cache as $big_url => $big_name) {
-            if (strtolower($big_url) == strtolower(CONTROLLER_NAME)) {
-                $module = $big_name;
-                $module_url = U("Admin/" . "$big_url" . '/index');
-            } else {
-            }
+        $authority = null;
+        if($_SESSION['admin']['id'] != 1){
+            $role = D('AdminRole')->find($_SESSION['admin']['role_id']);
+            $authority = explode(',', $role['authority']);
         }
+        $menus = D('AdminModule')->getMenus($authority, CONTROLLER_NAME, ACTION_NAME);
+        $cur_menu = array();
+        if($menus['cur_menu']['grade'] == 3){
+            $cur_menu[3] = $menus['cur_menu'];
+            $cur_menu[2] = $menus['sub_menus'][$cur_menu[3]['parent_id']];
 
-        $cache = get_opinion('admin_sub_menu');
-        foreach ($cache as $big_url => $big_name) {
-            if (strtolower($big_url) == strtolower(CONTROLLER_NAME)) {
-                foreach ($big_name as $sub_url => $sub_name) {
-                    $sub_true_url = explode('/', $sub_url);
-                    if (!strcasecmp($sub_true_url [1], strtolower(ACTION_NAME))) {
-                        $action = $sub_name;
-                        $action_url = U("Admin/" . "$sub_url");
-                    }
-                }
-            }
+        }else{
+            $cur_menu[2] = $menus['cur_menu'];
         }
+        $cur_menu[1] = $menus['menus'][$cur_menu[2]['parent_id']];
 
-        $icon = C('admin_big_menu_icon');
-        $menu_icon = $icon[ucfirst(CONTROLLER_NAME)];
-
-        $this->assign('group', '管理');
-        $this->assign('module', $module);
-        $this->assign('action', $action);
-        $this->assign('menu_icon', $menu_icon);
-        $this->assign('module_url', $module_url);
-        $this->assign('action_url', $action_url);
-
+        $this->assign('menus', $cur_menu);
+        $this->assign('menu_name', $menus['cur_menu']['name']);
     }
 
     private function _currentAdmin(){
