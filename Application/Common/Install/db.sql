@@ -1,3 +1,5 @@
+set names utf8;
+
 CREATE TABLE `admin` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `password` varchar(64) NOT NULL DEFAULT '' comment '密码',
